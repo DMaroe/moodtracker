@@ -1,0 +1,1 @@
+import{a as e,n as t}from"./index-BLow_eg0.js";var n=t({method:`POST`}).handler(e(`cf44db3b26cb418d684ada8bac31e647ad82afea844ef1a688ce92d4fbe261d4`)),r=t({method:`GET`}).handler(e(`f2c4037bda4ef45327dd656edd161462d1ea4919da6f14e642db817872fd062f`)),i=t({method:`POST`}).handler(e(`27384186f0a56f6a847572e12cbbb3c4101cbf121f80f2f426ab16ca0f9b17f2`));export{r as n,i as r,n as t};
