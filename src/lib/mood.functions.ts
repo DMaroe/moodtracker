@@ -21,7 +21,7 @@ export type MoodEntry = MoodResult & {
 };
 
 export const analyzeMood = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => Input.parse(data))
+  .validator((data: unknown) => Input.parse(data))
   .handler(async ({ data }): Promise<MoodResult> => {
     requireAuthServer();
     const key = process.env.OPENAI_API_KEY;
@@ -81,7 +81,7 @@ const SaveEntryInput = z.object({
 });
 
 export const saveMoodEntry = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => SaveEntryInput.parse(data))
+  .validator((data: unknown) => SaveEntryInput.parse(data))
   .handler(async ({ data }) => {
     requireAuthServer();
     const db = await getDb();

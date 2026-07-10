@@ -1,7 +1,7 @@
 import { _ as getRequest, b as setCookie$1, g as getCookie, h as deleteCookie$1, l as createServerFn } from "./esm-Dova13aH.mjs";
 import { t as createServerRpc } from "./createServerRpc-WJgk8O8C.mjs";
 import { n as objectType, r as stringType } from "../_libs/zod.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/auth.functions-BVj9q1kM.js
+//#region node_modules/.nitro/vite/services/ssr/assets/auth.functions-CQmfQF2a.js
 var COOKIE_NAME = "mood-auth-v1";
 var ONE_HOUR = 3600;
 function getExpectedPasscode() {
@@ -28,7 +28,7 @@ var checkPasscode_createServerFn_handler = createServerRpc({
 	name: "checkPasscode",
 	filename: "src/lib/auth.functions.ts"
 }, (opts) => checkPasscode.__executeServer(opts));
-var checkPasscode = createServerFn({ method: "POST" }).inputValidator((data) => objectType({ passcode: stringType().min(1) }).parse(data)).handler(checkPasscode_createServerFn_handler, async ({ data }) => {
+var checkPasscode = createServerFn({ method: "POST" }).validator((data) => objectType({ passcode: stringType().min(1) }).parse(data)).handler(checkPasscode_createServerFn_handler, async ({ data }) => {
 	const expected = getExpectedPasscode();
 	if (data.passcode.trim() !== expected) throw new Error("Incorrect passcode");
 	setCookie$1(COOKIE_NAME, expected, {

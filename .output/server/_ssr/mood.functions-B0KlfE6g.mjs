@@ -1,9 +1,9 @@
 import { l as createServerFn } from "./esm-Dova13aH.mjs";
 import { t as createServerRpc } from "./createServerRpc-WJgk8O8C.mjs";
 import { n as objectType, r as stringType, t as numberType } from "../_libs/zod.mjs";
-import { a as requireAuthServer } from "./auth.functions-CarvgIDK.mjs";
-import processModule from "node:process";
-//#region node_modules/.nitro/vite/services/ssr/assets/mood.functions-Cds89nE_.js
+import { a as requireAuthServer } from "./auth.functions-BgLnY4gA.mjs";
+import process from "node:process";
+//#region node_modules/.nitro/vite/services/ssr/assets/mood.functions-B0KlfE6g.js
 import("wrangler");
 async function getDb() {
 	const env = globalThis.__env__;
@@ -22,9 +22,9 @@ var analyzeMood_createServerFn_handler = createServerRpc({
 	name: "analyzeMood",
 	filename: "src/lib/mood.functions.ts"
 }, (opts) => analyzeMood.__executeServer(opts));
-var analyzeMood = createServerFn({ method: "POST" }).inputValidator((data) => Input.parse(data)).handler(analyzeMood_createServerFn_handler, async ({ data }) => {
+var analyzeMood = createServerFn({ method: "POST" }).validator((data) => Input.parse(data)).handler(analyzeMood_createServerFn_handler, async ({ data }) => {
 	requireAuthServer();
-	const key = processModule.env.OPENAI_API_KEY;
+	const key = process.env.OPENAI_API_KEY;
 	if (!key) throw new Error("Missing OPENAI_API_KEY");
 	const res = await fetch("https://api.openai.com/v1/chat/completions", {
 		method: "POST",
@@ -75,7 +75,7 @@ var saveMoodEntry_createServerFn_handler = createServerRpc({
 	name: "saveMoodEntry",
 	filename: "src/lib/mood.functions.ts"
 }, (opts) => saveMoodEntry.__executeServer(opts));
-var saveMoodEntry = createServerFn({ method: "POST" }).inputValidator((data) => SaveEntryInput.parse(data)).handler(saveMoodEntry_createServerFn_handler, async ({ data }) => {
+var saveMoodEntry = createServerFn({ method: "POST" }).validator((data) => SaveEntryInput.parse(data)).handler(saveMoodEntry_createServerFn_handler, async ({ data }) => {
 	requireAuthServer();
 	await (await getDb()).prepare("INSERT INTO mood_entries (id, text, score, mood, emoji, summary, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)").bind(data.id, data.text, data.score, data.mood, data.emoji, data.summary, data.createdAt).run();
 	return { ok: true };
