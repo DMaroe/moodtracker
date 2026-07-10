@@ -1,12 +1,12 @@
 import { _ as getRequest, b as setCookie$1, g as getCookie, h as deleteCookie$1, l as createServerFn } from "./esm-Dova13aH.mjs";
 import { t as createServerRpc } from "./createServerRpc-WJgk8O8C.mjs";
 import { n as objectType, r as stringType } from "../_libs/zod.mjs";
-import process from "node:process";
-//#region node_modules/.nitro/vite/services/ssr/assets/auth.functions-LvIo2QFj.js
+import processModule from "node:process";
+//#region node_modules/.nitro/vite/services/ssr/assets/auth.functions-CNKOmC3m.js
 var COOKIE_NAME = "mood-auth-v1";
 var ONE_HOUR = 3600;
 function getExpectedPasscode() {
-	return (getRequest()?.context)?.cloudflare?.env?.APP_PASSCODE ?? process.env.APP_PASSCODE;
+	return (getRequest()?.context)?.cloudflare?.env?.APP_PASSCODE ?? processModule.env.APP_PASSCODE;
 }
 var isAuthed_createServerFn_handler = createServerRpc({
 	id: "dfd087223224f114e56400ccb848ed9f1e8981ed9d83adf2cf0deeda19d4fb4e",
@@ -45,5 +45,14 @@ var logout = createServerFn({ method: "POST" }).handler(logout_createServerFn_ha
 	deleteCookie$1(COOKIE_NAME, { path: "/" });
 	return { ok: true };
 });
+var debugContext_createServerFn_handler = createServerRpc({
+	id: "a5bec5374303f3f008a3dd37820012a7cc0c126cff575454855636971c21f27b",
+	name: "debugContext",
+	filename: "src/lib/auth.functions.ts"
+}, (opts) => debugContext.__executeServer(opts));
+var debugContext = createServerFn({ method: "GET" }).handler(debugContext_createServerFn_handler, async () => {
+	const event = getRequestEvent();
+	return { context: JSON.parse(JSON.stringify(event?.context ?? {})) };
+});
 //#endregion
-export { checkPasscode_createServerFn_handler, isAuthed_createServerFn_handler, logout_createServerFn_handler };
+export { checkPasscode_createServerFn_handler, debugContext_createServerFn_handler, isAuthed_createServerFn_handler, logout_createServerFn_handler };

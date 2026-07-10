@@ -4,8 +4,8 @@ import { C as getStylesheetHref, D as isRedirect, E as executeRewriteInput, M as
 import { n as createMemoryHistory } from "../_libs/tanstack__history.mjs";
 import { d as su, i as mergeHeaders, l as Pu, n as getNormalizedURL, o as createRawStreamRPCPlugin, r as getOrigin, s as createSerializationAdapter, t as attachRouterServerSsrUtils, u as iu } from "../_libs/@tanstack/router-core+[...].mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
-import { t as getServerFnById } from "../__23tanstack-start-server-fn-resolver-Doyz0mED.mjs";
-import process from "node:process";
+import { t as getServerFnById } from "../__23tanstack-start-server-fn-resolver-DUQmQ8Hh.mjs";
+import processModule from "node:process";
 require_react();
 var import_jsx_runtime = require_jsx_runtime();
 function StartServer(props) {
@@ -28,7 +28,7 @@ var HEADERS = { TSS_SHELL: "X-TSS_SHELL" };
 * the dev styles URL for route-scoped CSS collection.
 */
 async function getStartManifest(matchedRoutes) {
-	const { tsrStartManifest } = await import("../_tanstack-start-manifest_v-Dv3aQ44s.mjs");
+	const { tsrStartManifest } = await import("../_tanstack-start-manifest_v-BCnEWP3_.mjs");
 	const startManifest = tsrStartManifest();
 	let routes = startManifest.routes;
 	routes[rootRouteId];
@@ -968,7 +968,7 @@ var getBaseManifest = getProdBaseManifest;
 var createEarlyHintsForRequest = createEarlyHintsCollector;
 async function loadEntries() {
 	const [routerEntry, startEntry, pluginAdapters] = await Promise.all([
-		import("./router-Dbq81ifC.mjs"),
+		import("./router-CO1IBxuJ.mjs"),
 		import("./start-Ok9K6Nid.mjs"),
 		import("./empty-plugin-adapters-D9UWiqvJ.mjs")
 	]);
@@ -984,8 +984,8 @@ function getEntries() {
 }
 var ROUTER_BASEPATH = "/";
 var SERVER_FN_BASE = "/_serverFn/";
-var IS_PRERENDERING = process.env.TSS_PRERENDERING === "true";
-var IS_SHELL_ENV = process.env.TSS_SHELL === "true";
+var IS_PRERENDERING = processModule.env.TSS_PRERENDERING === "true";
+var IS_SHELL_ENV = processModule.env.TSS_SHELL === "true";
 var IS_DEV = false;
 var ERR_NO_RESPONSE = IS_DEV ? `It looks like you forgot to return a response from your server route handler. If you want to defer to the app router, make sure to have a component set in this route.` : "Internal Server Error";
 var ERR_NO_DEFER = IS_DEV ? `You cannot defer to the app router if there is no component defined on this route.` : "Internal Server Error";

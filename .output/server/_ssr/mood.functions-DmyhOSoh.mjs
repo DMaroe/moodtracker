@@ -1,9 +1,9 @@
 import { l as createServerFn } from "./esm-Dova13aH.mjs";
 import { t as createServerRpc } from "./createServerRpc-WJgk8O8C.mjs";
 import { n as objectType, r as stringType, t as numberType } from "../_libs/zod.mjs";
-import { i as requireAuthServer } from "./auth.functions-B4JdUrFg.mjs";
-import process from "node:process";
-//#region node_modules/.nitro/vite/services/ssr/assets/mood.functions-CmVBB_cC.js
+import { i as requireAuthServer } from "./auth.functions-DP6hhDHZ.mjs";
+import processModule from "node:process";
+//#region node_modules/.nitro/vite/services/ssr/assets/mood.functions-DmyhOSoh.js
 import("wrangler");
 async function getDb() {
 	const env = globalThis.__env__;
@@ -24,7 +24,7 @@ var analyzeMood_createServerFn_handler = createServerRpc({
 }, (opts) => analyzeMood.__executeServer(opts));
 var analyzeMood = createServerFn({ method: "POST" }).inputValidator((data) => Input.parse(data)).handler(analyzeMood_createServerFn_handler, async ({ data }) => {
 	requireAuthServer();
-	const key = process.env.OPENAI_API_KEY;
+	const key = processModule.env.OPENAI_API_KEY;
 	if (!key) throw new Error("Missing OPENAI_API_KEY");
 	const res = await fetch("https://api.openai.com/v1/chat/completions", {
 		method: "POST",

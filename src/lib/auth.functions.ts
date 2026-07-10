@@ -47,3 +47,10 @@ export const logout = createServerFn({ method: "POST" }).handler(async () => {
   deleteCookie(COOKIE_NAME, { path: "/" });
   return { ok: true };
 });
+
+// TEMPORARY — remove after confirming the context shape. This exposes server
+// context (including secrets) to anyone who calls it, so don't leave it deployed.
+export const debugContext = createServerFn({ method: "GET" }).handler(async () => {
+  const event = getRequestEvent();
+  return { context: JSON.parse(JSON.stringify(event?.context ?? {})) };
+});

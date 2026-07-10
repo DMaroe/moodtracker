@@ -1,4 +1,4 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-Dv3aQ44s.js
+//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-BCnEWP3_.js
 var tsrStartManifest = () => ({ routes: {
 	__root__: {
 		filePath: "/Users/notdylan/Desktop/codes/moodtracker/src/routes/__root.tsx",
@@ -8,41 +8,41 @@ var tsrStartManifest = () => ({ routes: {
 			"/login",
 			"/result"
 		],
-		preloads: ["/assets/index-BLow_eg0.js", "/assets/useRouter-bmvfDLAM.js"],
+		preloads: ["/assets/index-Bt8HAdmM.js", "/assets/useRouter-bmvfDLAM.js"],
 		scripts: [{ attrs: {
 			type: "module",
 			async: !0,
-			src: "/assets/index-BLow_eg0.js"
+			src: "/assets/index-Bt8HAdmM.js"
 		} }]
 	},
 	"/": {
 		filePath: "/Users/notdylan/Desktop/codes/moodtracker/src/routes/index.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/routes-BMWitivA.js",
-			"/assets/useServerFn-BnvmlCNf.js",
+			"/assets/routes-BDoHOUJ-.js",
+			"/assets/useServerFn-eCm5PYfz.js",
 			"/assets/mood-storage-CvK-Wfud.js",
-			"/assets/mood.functions-BL07g5EW.js"
+			"/assets/mood.functions-2tnqSNye.js"
 		]
 	},
 	"/history": {
 		filePath: "/Users/notdylan/Desktop/codes/moodtracker/src/routes/history.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/history-CvXKGc26.js",
-			"/assets/useServerFn-BnvmlCNf.js",
-			"/assets/mood.functions-BL07g5EW.js"
+			"/assets/history-BdmTYgyh.js",
+			"/assets/useServerFn-eCm5PYfz.js",
+			"/assets/mood.functions-2tnqSNye.js"
 		]
 	},
 	"/login": {
 		filePath: "/Users/notdylan/Desktop/codes/moodtracker/src/routes/login.tsx",
 		children: void 0,
-		preloads: ["/assets/login-BMF-nixJ.js", "/assets/useServerFn-BnvmlCNf.js"]
+		preloads: ["/assets/login-ztE7gKZY.js", "/assets/useServerFn-eCm5PYfz.js"]
 	},
 	"/result": {
 		filePath: "/Users/notdylan/Desktop/codes/moodtracker/src/routes/result.tsx",
 		children: void 0,
-		preloads: ["/assets/result-CpsshGgH.js", "/assets/mood-storage-CvK-Wfud.js"]
+		preloads: ["/assets/result-Ca0SM9Zf.js", "/assets/mood-storage-CvK-Wfud.js"]
 	}
 } });
 //#endregion
