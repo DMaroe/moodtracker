@@ -1,4 +1,4 @@
-import { o as NullProtoObj } from "./h3+rou3+srvx+unenv.mjs";
+import { o as NullProtoObj } from "./h3+rou3+srvx.mjs";
 //#region node_modules/h3-v2/node_modules/srvx/dist/adapters/cloudflare.mjs
 var FastURL = URL;
 var FastResponse = Response;

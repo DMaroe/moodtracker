@@ -12,5 +12,18 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
-  
+
+  // Fix: wrangler's bundled blake3-wasm package leaks into the SSR/Nitro build graph
+  // and its ESM entry (./node.js) can't be resolved by Rolldown when targeting the
+  // cloudflare-module Worker runtime. Externalize both so they're never bundled.
+  vite: {
+    ssr: {
+      external: ["wrangler", "blake3-wasm"],
+    },
+    build: {
+      rollupOptions: {
+        external: ["wrangler", "blake3-wasm"],
+      },
+    },
+  },
 });

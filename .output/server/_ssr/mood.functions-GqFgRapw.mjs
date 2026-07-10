@@ -1,11 +1,10 @@
-import { o as __toESM } from "../_runtime.mjs";
 import { l as createServerFn } from "./esm-Dova13aH.mjs";
 import { t as createServerRpc } from "./createServerRpc-WJgk8O8C.mjs";
 import { n as objectType, r as stringType, t as numberType } from "../_libs/zod.mjs";
 import { i as requireAuthServer } from "./auth.functions-C9tHsZw-.mjs";
 import processModule from "node:process";
 //#region node_modules/.nitro/vite/services/ssr/assets/mood.functions-GqFgRapw.js
-import("../_libs/wrangler.mjs").then((n) => /* @__PURE__ */ __toESM(n.t()));
+import("wrangler");
 async function getDb() {
 	const env = globalThis.__env__;
 	if (!env?.DB) throw new Error("D1 binding 'DB' not found. Check that wrangler.jsonc has a d1_databases entry named DB.");
