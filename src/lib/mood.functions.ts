@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { requireAuthServer } from "@/lib/auth.functions";
-
+import { getRequest } from "@tanstack/react-start/server";
 const Input = z.object({ text: z.string().min(1).max(280) });
 
 const MoodSchema = z.object({
@@ -20,12 +20,36 @@ export type MoodEntry = MoodResult & {
   createdAt: string;
 };
 
+function getOpenAIKey(): string {
+  const event = getRequest();
+
+  if (!event) {
+    throw new Error("No request context available");
+  }
+
+  const ctx = event.context as any;
+
+  const key =
+    ctx?.cloudflare?.env?.OPENAI_API_KEY ||
+    ctx?.env?.OPENAI_API_KEY ||
+    globalThis?.__env__?.OPENAI_API_KEY ||
+    process.env.OPENAI_API_KEY;
+
+  if (!key) {
+    console.error("Available context:", JSON.stringify(ctx, null, 2));
+    throw new Error(
+      "OPENAI_API_KEY secret missing. Check Cloudflare Worker secret binding."
+    );
+  }
+
+  return key;
+}
+
 export const analyzeMood = createServerFn({ method: "POST" })
   .validator((data: unknown) => Input.parse(data))
   .handler(async ({ data }): Promise<MoodResult> => {
     requireAuthServer();
-    const key = process.env.OPENAI_API_KEY;
-    if (!key) throw new Error("Missing OPENAI_API_KEY");
+    const key = getOpenAIKey;
 
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
