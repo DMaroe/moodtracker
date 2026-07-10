@@ -6,10 +6,19 @@ const COOKIE_NAME = "mood-auth-v1";
 const ONE_HOUR = 60 * 60;
 
 function getExpectedPasscode(): string | undefined {
-  const request = getRequest();
+  const event = getRequest();
+  const ctx = event?.context as any;
   return (
-    (request?.context as any)?.cloudflare?.env?.APP_PASSCODE ?? process.env.APP_PASSCODE
+    ctx?.cloudflare?.env?.APP_PASSCODE ??
+    ctx?.env?.APP_PASSCODE ??
+    process.env.APP_PASSCODE
   );
+}
+
+function isSecureRequest(): boolean {
+  const event = getRequest();
+  const url = event?.request?.url;
+  return url ? url.startsWith("https://") : process.env.NODE_ENV === "production";
 }
 
 export const requireAuthServer = createServerOnlyFn(() => {
@@ -35,7 +44,7 @@ export const checkPasscode = createServerFn({ method: "POST" })
 
     setCookie(COOKIE_NAME, expected, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isSecureRequest(),
       sameSite: "lax",
       maxAge: ONE_HOUR,
       path: "/",
@@ -48,9 +57,8 @@ export const logout = createServerFn({ method: "POST" }).handler(async () => {
   return { ok: true };
 });
 
-// TEMPORARY — remove after confirming the context shape. This exposes server
-// context (including secrets) to anyone who calls it, so don't leave it deployed.
+// TEMPORARY — remove after confirming the context shape.
 export const debugContext = createServerFn({ method: "GET" }).handler(async () => {
-  const event = getRequestEvent();
+  const event = getRequest();
   return { context: JSON.parse(JSON.stringify(event?.context ?? {})) };
 });

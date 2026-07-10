@@ -2,11 +2,16 @@ import { _ as getRequest, b as setCookie$1, g as getCookie, h as deleteCookie$1,
 import { t as createServerRpc } from "./createServerRpc-WJgk8O8C.mjs";
 import { n as objectType, r as stringType } from "../_libs/zod.mjs";
 import processModule from "node:process";
-//#region node_modules/.nitro/vite/services/ssr/assets/auth.functions-CNKOmC3m.js
+//#region node_modules/.nitro/vite/services/ssr/assets/auth.functions-BeHmx28x.js
 var COOKIE_NAME = "mood-auth-v1";
 var ONE_HOUR = 3600;
 function getExpectedPasscode() {
-	return (getRequest()?.context)?.cloudflare?.env?.APP_PASSCODE ?? processModule.env.APP_PASSCODE;
+	const ctx = getRequest()?.context;
+	return ctx?.cloudflare?.env?.APP_PASSCODE ?? ctx?.env?.APP_PASSCODE ?? processModule.env.APP_PASSCODE;
+}
+function isSecureRequest() {
+	const url = getRequest()?.request?.url;
+	return url ? url.startsWith("https://") : true;
 }
 var isAuthed_createServerFn_handler = createServerRpc({
 	id: "dfd087223224f114e56400ccb848ed9f1e8981ed9d83adf2cf0deeda19d4fb4e",
@@ -29,7 +34,7 @@ var checkPasscode = createServerFn({ method: "POST" }).inputValidator((data) => 
 	if (data.passcode !== expected) throw new Error("Incorrect passcode");
 	setCookie$1(COOKIE_NAME, expected, {
 		httpOnly: true,
-		secure: true,
+		secure: isSecureRequest(),
 		sameSite: "lax",
 		maxAge: ONE_HOUR,
 		path: "/"
@@ -51,7 +56,7 @@ var debugContext_createServerFn_handler = createServerRpc({
 	filename: "src/lib/auth.functions.ts"
 }, (opts) => debugContext.__executeServer(opts));
 var debugContext = createServerFn({ method: "GET" }).handler(debugContext_createServerFn_handler, async () => {
-	const event = getRequestEvent();
+	const event = getRequest();
 	return { context: JSON.parse(JSON.stringify(event?.context ?? {})) };
 });
 //#endregion

@@ -5,6 +5,7 @@ import { analyzeMood, saveMoodEntry, type MoodEntry } from "@/lib/mood.functions
 import { setCurrent } from "@/lib/mood-storage";
 import { requireAuth } from "@/lib/require-auth";
 import { nanoid } from "nanoid";
+import { logout } from "@/lib/auth.functions";
 
 export const Route = createFileRoute("/")({
   beforeLoad: requireAuth,
@@ -16,6 +17,11 @@ export const Route = createFileRoute("/")({
   }),
   component: Home,
 });
+
+async function handleLogout() {
+  await logout();
+  window.location.href = "/login"; // or wherever your login page lives
+}
 
 function Home() {
   const [text, setText] = useState("");
@@ -97,6 +103,11 @@ function Home() {
             {loading ? "Feeling it out…" : "Analyze Eun's Mood ✨"}
           </button>
         </form>
+        <button 
+          type="submit"
+          className="mt-6 w-full rounded-full bg-white text-diary-pink font-semibold py-4 text-base shadow-diary-glow transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
+          
+          onClick={handleLogout}>Log out</button>
       </main>
     </div>
   );
