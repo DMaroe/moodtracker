@@ -1,10 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { analyzeMood } from "@/lib/mood.functions";
-import { addEntry, setCurrent, type MoodEntry } from "@/lib/mood-storage";
+import { analyzeMood, saveMoodEntry, type MoodEntry } from "@/lib/mood.functions";
+import { setCurrent } from "@/lib/mood-storage";
+import { requireAuth } from "@/lib/require-auth";
+import { nanoid } from "nanoid";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: requireAuth,
   head: () => ({
     meta: [
       { title: "Mood Diary — How are you feeling today?" },
@@ -20,6 +23,7 @@ function Home() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const analyze = useServerFn(analyzeMood);
+  const save = useServerFn(saveMoodEntry);
 
   const MAX = 280;
   const remaining = text.length;
@@ -33,11 +37,11 @@ function Home() {
       const result = await analyze({ data: { text: text.trim() } });
       const entry: MoodEntry = {
         ...result,
-        id: crypto.randomUUID(),
+        id: nanoid(),
         text: text.trim(),
         createdAt: new Date().toISOString(),
       };
-      addEntry(entry);
+      await save({ data: entry });
       setCurrent(entry);
       navigate({ to: "/result" });
     } catch (err) {

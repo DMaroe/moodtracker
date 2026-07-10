@@ -1,8 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { getCurrent, type MoodEntry } from "@/lib/mood-storage";
+import { requireAuth } from "@/lib/require-auth";
 
 export const Route = createFileRoute("/result")({
+  beforeLoad: requireAuth,
   head: () => ({ meta: [{ title: "Your Mood — Mood Diary" }] }),
   component: Result,
 });

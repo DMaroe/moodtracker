@@ -1,10 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { v4 as uuidv4 } from "uuid";
+import { getDb } from "@/lib/db";
+import { requireAuthServer } from "@/lib/auth.functions";
 
 const Input = z.object({ text: z.string().min(1).max(280) });
-const id = uuidv4();
-console.log(id);
 
 const MoodSchema = z.object({
   score: z.number().min(0).max(100),
@@ -15,9 +14,16 @@ const MoodSchema = z.object({
 
 export type MoodResult = z.infer<typeof MoodSchema>;
 
+export type MoodEntry = MoodResult & {
+  id: string;
+  text: string;
+  createdAt: string;
+};
+
 export const analyzeMood = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => Input.parse(data))
   .handler(async ({ data }): Promise<MoodResult> => {
+    requireAuthServer();
     const key = process.env.OPENAI_API_KEY;
     if (!key) throw new Error("Missing OPENAI_API_KEY");
 
@@ -49,4 +55,41 @@ export const analyzeMood = createServerFn({ method: "POST" })
     const content = json.choices?.[0]?.message?.content ?? "{}";
     const parsed = MoodSchema.parse(JSON.parse(content));
     return parsed;
+  });
+
+export const listMoodEntries = createServerFn({ method: "GET" }).handler(
+  async (): Promise<MoodEntry[]> => {
+    requireAuthServer();
+    const db = await getDb();
+    const { results } = await db
+      .prepare(
+        "SELECT id, text, score, mood, emoji, summary, created_at as createdAt FROM mood_entries ORDER BY created_at DESC LIMIT 100",
+      )
+      .all<MoodEntry>();
+    return results;
+  },
+);
+
+const SaveEntryInput = z.object({
+  id: z.string().min(1),
+  text: z.string().min(1).max(280),
+  score: z.number().min(0).max(100),
+  mood: z.string(),
+  emoji: z.string(),
+  summary: z.string(),
+  createdAt: z.string(),
+});
+
+export const saveMoodEntry = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => SaveEntryInput.parse(data))
+  .handler(async ({ data }) => {
+    requireAuthServer();
+    const db = await getDb();
+    await db
+      .prepare(
+        "INSERT INTO mood_entries (id, text, score, mood, emoji, summary, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      )
+      .bind(data.id, data.text, data.score, data.mood, data.emoji, data.summary, data.createdAt)
+      .run();
+    return { ok: true };
   });

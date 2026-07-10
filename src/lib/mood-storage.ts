@@ -1,28 +1,13 @@
-import type { MoodResult } from "./mood.functions";
+import type { MoodEntry } from "./mood.functions";
 
-export type MoodEntry = MoodResult & {
-  id: string;
-  text: string;
-  createdAt: string;
-};
+export type { MoodEntry };
 
-const KEY = "mood-history-v1";
+// The full mood history now lives server-side in D1 (see mood.functions.ts:
+// listMoodEntries / saveMoodEntry). This file only handles handing the
+// just-submitted entry from the "/" page to "/result" without a refetch or
+// a URL param — sessionStorage is appropriate here since it's per-tab,
+// throwaway UI state, not the source of truth.
 const CURRENT = "mood-current-v1";
-
-export function getHistory(): MoodEntry[] {
-  if (typeof window === "undefined") return [];
-  try {
-    return JSON.parse(localStorage.getItem(KEY) || "[]");
-  } catch {
-    return [];
-  }
-}
-
-export function addEntry(entry: MoodEntry) {
-  const list = getHistory();
-  list.unshift(entry);
-  localStorage.setItem(KEY, JSON.stringify(list.slice(0, 100)));
-}
 
 export function setCurrent(entry: MoodEntry) {
   sessionStorage.setItem(CURRENT, JSON.stringify(entry));

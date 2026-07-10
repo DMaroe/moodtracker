@@ -1,8 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
-import { getHistory, type MoodEntry } from "@/lib/mood-storage";
+import { listMoodEntries, type MoodEntry } from "@/lib/mood.functions";
+import { requireAuth } from "@/lib/require-auth";
 
 export const Route = createFileRoute("/history")({
+  beforeLoad: requireAuth,
   head: () => ({ meta: [{ title: "Mood History — Mood Diary" }] }),
   component: History,
 });
@@ -16,9 +19,13 @@ function formatDate(iso: string) {
 
 function History() {
   const [entries, setEntries] = useState<MoodEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const list = useServerFn(listMoodEntries);
 
   useEffect(() => {
-    setEntries(getHistory());
+    list()
+      .then(setEntries)
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -34,7 +41,9 @@ function History() {
         <h1 className="text-3xl font-semibold text-diary-ink">Your moods</h1>
         <p className="text-diary-ink/60 mt-2 text-sm">A little trail of how you've felt.</p>
 
-        {entries.length === 0 ? (
+        {loading ? (
+          <div className="mt-12 text-center text-diary-ink/50 text-sm">Loading…</div>
+        ) : entries.length === 0 ? (
           <div className="mt-12 text-center bg-white/70 backdrop-blur rounded-3xl p-8 shadow-diary-soft border border-white">
             <div className="text-5xl mb-4">🌸</div>
             <p className="text-diary-ink/70">No entries yet.</p>
