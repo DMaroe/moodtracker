@@ -1,7 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { v4 as uuidv4 } from "uuid";
 
 const Input = z.object({ text: z.string().min(1).max(280) });
+const id = uuidv4();
+console.log(id);
 
 const MoodSchema = z.object({
   score: z.number().min(0).max(100),
@@ -15,17 +18,17 @@ export type MoodResult = z.infer<typeof MoodSchema>;
 export const analyzeMood = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => Input.parse(data))
   .handler(async ({ data }): Promise<MoodResult> => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) throw new Error("Missing LOVABLE_API_KEY");
+    const key = process.env.OPENAI_API_KEY;
+    if (!key) throw new Error("Missing OPENAI_API_KEY");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Lovable-API-Key": key,
+        Authorization: `Bearer ${key}`,
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "system",
@@ -40,7 +43,7 @@ export const analyzeMood = createServerFn({ method: "POST" })
 
     if (!res.ok) {
       const body = await res.text();
-      throw new Error(`AI gateway error ${res.status}: ${body}`);
+      throw new Error(`OpenAI API error ${res.status}: ${body}`);
     }
     const json = await res.json();
     const content = json.choices?.[0]?.message?.content ?? "{}";
