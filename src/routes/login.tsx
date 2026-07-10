@@ -1,13 +1,27 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
-import { checkPasscode } from "@/lib/auth.functions";
-
+import { checkPasscode, debugContext } from "@/lib/auth.functions";
+import { useEffect, useState } from "react";
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Sign in — Mood Diary" }] }),
   component: Login,
 });
 
+
+
+function DebugPanel() {
+  const [result, setResult] = useState<any>(null);
+
+  useEffect(() => {
+    debugContext().then(setResult).catch((e) => setResult({ error: String(e) }));
+  }, []);
+
+  return (
+    <pre style={{ fontSize: 12, whiteSpace: "pre-wrap", background: "#eee", padding: 8 }}>
+      {JSON.stringify(result, null, 2)}
+    </pre>
+  );
+}
 function Login() {
   const [passcode, setPasscode] = useState("");
   const [error, setError] = useState<string | null>(null);
