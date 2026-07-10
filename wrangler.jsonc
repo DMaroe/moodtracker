@@ -7,11 +7,6 @@
 	],
 	"d1_databases": [
 		{
-			"binding": "DB",
-			"database_name": "moodtracker-db",
-			"database_id": "REPLACE_WITH_YOUR_DATABASE_ID"
-		},
-		{
 			"binding": "moodtracker_db",
 			"database_name": "moodtracker-db",
 			"database_id": "a70166ef-0d94-43f9-845c-48f46043196c"
