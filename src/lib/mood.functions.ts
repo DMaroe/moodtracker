@@ -49,7 +49,7 @@ export const analyzeMood = createServerFn({ method: "POST" })
   .validator((data: unknown) => Input.parse(data))
   .handler(async ({ data }): Promise<MoodResult> => {
     requireAuthServer();
-    const key = getOpenAIKey;
+    const key = getOpenAIKey();
 
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
