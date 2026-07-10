@@ -10,8 +10,8 @@ export const Route = createFileRoute("/")({
   beforeLoad: requireAuth,
   head: () => ({
     meta: [
-      { title: "Mood Diary — How are you feeling today?" },
-      { name: "description", content: "A cute personal AI mood diary." },
+      { title: "Mood Diary — How is Eun feeling today?" },
+      { name: "description", content: "A cute personal AI mood diary just for Eun." },
     ],
   }),
   component: Home,
@@ -64,10 +64,10 @@ function Home() {
 
       <main className="flex-1 max-w-md mx-auto w-full flex flex-col justify-center">
         <h1 className="text-3xl font-semibold text-diary-ink text-center leading-snug">
-          How are you feeling today? 💗
+          How is Eun feeling today? 💗
         </h1>
         <p className="text-center text-diary-ink/60 mt-3 text-sm">
-          Write it out — I'll listen.
+          Write it out — I'll listen babe.
         </p>
 
         <form onSubmit={onSubmit} className="mt-8">
@@ -94,7 +94,7 @@ function Home() {
             disabled={!text.trim() || loading}
             className="mt-6 w-full rounded-full bg-diary-pink text-white font-semibold py-4 text-base shadow-diary-glow transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
           >
-            {loading ? "Feeling it out…" : "Analyze My Mood ✨"}
+            {loading ? "Feeling it out…" : "Analyze Eun's Mood ✨"}
           </button>
         </form>
       </main>

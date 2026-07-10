@@ -38,7 +38,7 @@ function History() {
       </header>
 
       <main className="max-w-md mx-auto w-full">
-        <h1 className="text-3xl font-semibold text-diary-ink">Your moods</h1>
+        <h1 className="text-3xl font-semibold text-diary-ink">Eun's moods</h1>
         <p className="text-diary-ink/60 mt-2 text-sm">A little trail of how you've felt.</p>
 
         {loading ? (
