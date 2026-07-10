@@ -1,8 +1,8 @@
-import { g as getCookie, i as TSS_SERVER_FUNCTION, l as createServerFn } from "./esm-Dova13aH.mjs";
+import { _ as getRequest, g as getCookie, i as TSS_SERVER_FUNCTION, l as createServerFn } from "./esm-Dova13aH.mjs";
 import { n as objectType, r as stringType } from "../_libs/zod.mjs";
-import { t as getServerFnById } from "../__23tanstack-start-server-fn-resolver-6TmvvcEW.mjs";
-import processModule from "node:process";
-//#region node_modules/.nitro/vite/services/ssr/assets/auth.functions-C9tHsZw-.js
+import { t as getServerFnById } from "../__23tanstack-start-server-fn-resolver-Doyz0mED.mjs";
+import process from "node:process";
+//#region node_modules/.nitro/vite/services/ssr/assets/auth.functions-B4JdUrFg.js
 var createSsrRpc = (functionId) => {
 	const url = "/_serverFn/" + functionId;
 	const serverFnMeta = { id: functionId };
@@ -16,8 +16,11 @@ var createSsrRpc = (functionId) => {
 	});
 };
 var COOKIE_NAME = "mood-auth-v1";
+function getExpectedPasscode() {
+	return (getRequest()?.context)?.cloudflare?.env?.APP_PASSCODE ?? process.env.APP_PASSCODE;
+}
 var requireAuthServer = () => {
-	const expected = processModule.env.APP_PASSCODE;
+	const expected = getExpectedPasscode();
 	const cookie = getCookie(COOKIE_NAME);
 	if (!expected || cookie !== expected) throw new Error("Unauthorized");
 };

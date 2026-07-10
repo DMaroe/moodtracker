@@ -3,7 +3,7 @@ import { t as createMiddleware } from "./createStart-Dt05N14y.mjs";
 import { D as isRedirect, k as parseRedirect } from "../_libs/@tanstack/react-router+[...].mjs";
 import { a as defaultSerovalPlugins, c as makeSerovalPlugin, i as mergeHeaders } from "../_libs/@tanstack/router-core+[...].mjs";
 import { AsyncLocalStorage } from "node:async_hooks";
-//#region node_modules/.nitro/vite/services/ssr/assets/request-response-DKbRKVw6.js
+//#region node_modules/.nitro/vite/services/ssr/assets/request-response-CKvuvm0m.js
 var GLOBAL_EVENT_STORAGE_KEY = Symbol.for("tanstack-start:event-storage");
 var globalObj$1 = globalThis;
 if (!globalObj$1[GLOBAL_EVENT_STORAGE_KEY]) globalObj$1[GLOBAL_EVENT_STORAGE_KEY] = new AsyncLocalStorage();
@@ -53,6 +53,9 @@ function getH3Event() {
 	const event = eventStorage.getStore();
 	if (!event) throw new Error(`No StartEvent found in AsyncLocalStorage. Make sure you are using the function within the server runtime.`);
 	return event.h3Event;
+}
+function getRequest() {
+	return getH3Event().req;
 }
 /**
 * Parse the request to get HTTP Cookie header string and return an object of all cookie name-value pairs.
@@ -418,4 +421,4 @@ function getDefaultSerovalPlugins() {
 	return [...(getStartOptions()?.serializationAdapters)?.map(makeSerovalPlugin) ?? [], ...defaultSerovalPlugins];
 }
 //#endregion
-export { getResponse as _, X_TSS_RAW_RESPONSE as a, createNullProtoObject as c, getDefaultSerovalPlugins as d, getStartContext as f, getCookie as g, deleteCookie$1 as h, TSS_SERVER_FUNCTION as i, createServerFn as l, safeObjectMerge as m, TSS_CONTENT_TYPE_FRAMED_VERSIONED as n, X_TSS_SERIALIZED as o, runWithStartContext as p, TSS_FORMDATA_CONTEXT as r, createCsrfMiddleware as s, FrameType as t, flattenMiddlewares as u, requestHandler as v, setCookie$1 as y };
+export { getRequest as _, X_TSS_RAW_RESPONSE as a, setCookie$1 as b, createNullProtoObject as c, getDefaultSerovalPlugins as d, getStartContext as f, getCookie as g, deleteCookie$1 as h, TSS_SERVER_FUNCTION as i, createServerFn as l, safeObjectMerge as m, TSS_CONTENT_TYPE_FRAMED_VERSIONED as n, X_TSS_SERIALIZED as o, runWithStartContext as p, TSS_FORMDATA_CONTEXT as r, createCsrfMiddleware as s, FrameType as t, flattenMiddlewares as u, getResponse as v, requestHandler as y };

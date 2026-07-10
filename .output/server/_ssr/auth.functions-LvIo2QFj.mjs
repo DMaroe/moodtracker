@@ -1,17 +1,20 @@
-import { g as getCookie, h as deleteCookie$1, l as createServerFn, y as setCookie$1 } from "./esm-Dova13aH.mjs";
+import { _ as getRequest, b as setCookie$1, g as getCookie, h as deleteCookie$1, l as createServerFn } from "./esm-Dova13aH.mjs";
 import { t as createServerRpc } from "./createServerRpc-WJgk8O8C.mjs";
 import { n as objectType, r as stringType } from "../_libs/zod.mjs";
-import processModule from "node:process";
-//#region node_modules/.nitro/vite/services/ssr/assets/auth.functions-DfAvAvu3.js
+import process from "node:process";
+//#region node_modules/.nitro/vite/services/ssr/assets/auth.functions-LvIo2QFj.js
 var COOKIE_NAME = "mood-auth-v1";
-var ONE_YEAR = 3600 * 24 * 365;
+var ONE_HOUR = 3600;
+function getExpectedPasscode() {
+	return (getRequest()?.context)?.cloudflare?.env?.APP_PASSCODE ?? process.env.APP_PASSCODE;
+}
 var isAuthed_createServerFn_handler = createServerRpc({
 	id: "dfd087223224f114e56400ccb848ed9f1e8981ed9d83adf2cf0deeda19d4fb4e",
 	name: "isAuthed",
 	filename: "src/lib/auth.functions.ts"
 }, (opts) => isAuthed.__executeServer(opts));
 var isAuthed = createServerFn({ method: "GET" }).handler(isAuthed_createServerFn_handler, async () => {
-	const expected = processModule.env.APP_PASSCODE;
+	const expected = getExpectedPasscode();
 	const cookie = getCookie(COOKIE_NAME);
 	return { authed: Boolean(expected) && cookie === expected };
 });
@@ -21,14 +24,14 @@ var checkPasscode_createServerFn_handler = createServerRpc({
 	filename: "src/lib/auth.functions.ts"
 }, (opts) => checkPasscode.__executeServer(opts));
 var checkPasscode = createServerFn({ method: "POST" }).inputValidator((data) => objectType({ passcode: stringType().min(1) }).parse(data)).handler(checkPasscode_createServerFn_handler, async ({ data }) => {
-	const expected = processModule.env.APP_PASSCODE;
+	const expected = getExpectedPasscode();
 	if (!expected) throw new Error("Missing APP_PASSCODE on the server");
 	if (data.passcode !== expected) throw new Error("Incorrect passcode");
 	setCookie$1(COOKIE_NAME, expected, {
 		httpOnly: true,
 		secure: true,
 		sameSite: "lax",
-		maxAge: ONE_YEAR,
+		maxAge: ONE_HOUR,
 		path: "/"
 	});
 	return { ok: true };

@@ -1,14 +1,14 @@
 import { createServerFn, createServerOnlyFn } from "@tanstack/react-start";
-import { getCookie, setCookie, deleteCookie, getRequestEvent } from "@tanstack/react-start/server";
+import { getCookie, setCookie, deleteCookie, getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 
 const COOKIE_NAME = "mood-auth-v1";
 const ONE_HOUR = 60 * 60;
 
 function getExpectedPasscode(): string | undefined {
-  const event = getRequestEvent();
+  const request = getRequest();
   return (
-    (event?.context as any)?.cloudflare?.env?.APP_PASSCODE ?? process.env.APP_PASSCODE
+    (request?.context as any)?.cloudflare?.env?.APP_PASSCODE ?? process.env.APP_PASSCODE
   );
 }
 
