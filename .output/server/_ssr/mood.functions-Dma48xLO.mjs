@@ -1,9 +1,9 @@
-import { l as createServerFn } from "./esm-Dova13aH.mjs";
+import { _ as getRequest, l as createServerFn } from "./esm-Dova13aH.mjs";
 import { t as createServerRpc } from "./createServerRpc-WJgk8O8C.mjs";
 import { n as objectType, r as stringType, t as numberType } from "../_libs/zod.mjs";
-import { a as requireAuthServer } from "./auth.functions-BgLnY4gA.mjs";
+import { a as requireAuthServer } from "./auth.functions-CjTw4h0d.mjs";
 import process from "node:process";
-//#region node_modules/.nitro/vite/services/ssr/assets/mood.functions-B0KlfE6g.js
+//#region node_modules/.nitro/vite/services/ssr/assets/mood.functions-Dma48xLO.js
 import("wrangler");
 async function getDb() {
 	const env = globalThis.__env__;
@@ -17,6 +17,17 @@ var MoodSchema = objectType({
 	emoji: stringType(),
 	summary: stringType()
 });
+function getOpenAIKey() {
+	const event = getRequest();
+	if (!event) throw new Error("No request context available");
+	const ctx = event.context;
+	const key = ctx?.cloudflare?.env?.OPENAI_API_KEY || ctx?.env?.OPENAI_API_KEY || globalThis?.__env__?.OPENAI_API_KEY || process.env.OPENAI_API_KEY;
+	if (!key) {
+		console.error("Available context:", JSON.stringify(ctx, null, 2));
+		throw new Error("OPENAI_API_KEY secret missing. Check Cloudflare Worker secret binding.");
+	}
+	return key;
+}
 var analyzeMood_createServerFn_handler = createServerRpc({
 	id: "cf44db3b26cb418d684ada8bac31e647ad82afea844ef1a688ce92d4fbe261d4",
 	name: "analyzeMood",
@@ -24,8 +35,7 @@ var analyzeMood_createServerFn_handler = createServerRpc({
 }, (opts) => analyzeMood.__executeServer(opts));
 var analyzeMood = createServerFn({ method: "POST" }).validator((data) => Input.parse(data)).handler(analyzeMood_createServerFn_handler, async ({ data }) => {
 	requireAuthServer();
-	const key = process.env.OPENAI_API_KEY;
-	if (!key) throw new Error("Missing OPENAI_API_KEY");
+	const key = getOpenAIKey();
 	const res = await fetch("https://api.openai.com/v1/chat/completions", {
 		method: "POST",
 		headers: {
