@@ -45,7 +45,7 @@ export async function getDb(): Promise<D1Database> {
 
   // Check all possible locations for the D1 binding
   const db = 
-    ctx?.cloudflare?.env?.moodtracker-db ||    // Cloudflare Workers with env in cloudflare property
+    ctx?.cloudflare?.env?.moodtracker_db ||    // Cloudflare Workers with env in cloudflare property
     ctx?.env?.moodtracker_db ||                 // Cloudflare Workers with env directly on context
     (globalThis as { __env__?: { moodtracker_db?: D1Database } }).__env__?.moodtracker_db ||
     process.env.moodtracker_db;                // Fallback for other environments
