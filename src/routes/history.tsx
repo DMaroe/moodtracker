@@ -20,6 +20,7 @@ function formatDate(iso: string) {
 function History() {
   const [entries, setEntries] = useState<MoodEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const list = useServerFn(listMoodEntries);
 
   useEffect(() => {
@@ -27,6 +28,18 @@ function History() {
       .then(setEntries)
       .finally(() => setLoading(false));
   }, []);
+
+  function toggleExpanded(id: string) {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  }
 
   return (
     <div className="min-h-screen bg-diary-gradient px-5 py-10">
@@ -56,23 +69,60 @@ function History() {
           </div>
         ) : (
           <ul className="mt-6 space-y-3">
-            {entries.map((e) => (
-              <li
-                key={e.id}
-                className="bg-white/70 backdrop-blur rounded-2xl p-4 shadow-diary-soft border border-white flex items-center gap-4"
-              >
-                <div className="text-4xl">{e.emoji}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs text-diary-ink/50">{formatDate(e.createdAt)}</div>
-                  <div className="font-semibold text-diary-ink">{e.mood}</div>
-                  <div className="text-xs text-diary-ink/60 truncate">{e.text}</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-lg font-semibold text-diary-ink">{e.score}</div>
-                  <div className="text-[10px] text-diary-ink/40">/100</div>
-                </div>
-              </li>
-            ))}
+            {entries.map((e) => {
+              const isExpanded = expandedIds.has(e.id);
+              return (
+                <li
+                  key={e.id}
+                  className="bg-white/70 backdrop-blur rounded-2xl p-4 shadow-diary-soft border border-white"
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleExpanded(e.id)}
+                    className="w-full flex items-center gap-4 text-left"
+                  >
+                    <div className="text-4xl">{e.emoji}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs text-diary-ink/50">{formatDate(e.createdAt)}</div>
+                      <div className="font-semibold text-diary-ink">{e.mood}</div>
+                      {!isExpanded && (
+                        <div className="text-xs text-diary-ink/60 truncate">{e.text}</div>
+                      )}
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-semibold text-diary-ink">{e.score}</div>
+                      <div className="text-[10px] text-diary-ink/40">/100</div>
+                    </div>
+                    <div
+                      className={`text-diary-ink/40 text-sm transition-transform ${
+                        isExpanded ? "rotate-180" : ""
+                      }`}
+                    >
+                      ▾
+                    </div>
+                  </button>
+
+                  {isExpanded && (
+                    <div className="mt-4 pt-4 border-t border-diary-ink/10 space-y-3">
+                      <div>
+                        <div className="text-[10px] uppercase tracking-wide text-diary-ink/40 mb-1">
+                          Your entry
+                        </div>
+                        <p className="text-sm text-diary-ink/80 whitespace-pre-wrap">{e.text}</p>
+                      </div>
+                      <div>
+                        <div className="text-[10px] uppercase tracking-wide text-diary-ink/40 mb-1">
+                          AI reflection
+                        </div>
+                        <p className="text-sm text-diary-ink/80 whitespace-pre-wrap">
+                          {e.summary}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         )}
       </main>

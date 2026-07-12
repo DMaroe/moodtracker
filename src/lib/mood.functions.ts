@@ -3,7 +3,22 @@ import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { requireAuthServer } from "@/lib/auth.functions";
 import { getRequest } from "@tanstack/react-start/server";
-const Input = z.object({ text: z.string().min(1).max(280) });
+const MAX_WORDS = 5000;
+
+function countWords(text: string): number {
+  const trimmed = text.trim();
+  if (!trimmed) return 0;
+  return trimmed.split(/\s+/).length;
+}
+
+const Input = z.object({
+  text: z
+    .string()
+    .min(1)
+    .refine((val) => countWords(val) <= MAX_WORDS, {
+      message: `Entry must be ${MAX_WORDS} words or fewer`,
+    }),
+});
 
 const MoodSchema = z.object({
   score: z.number().min(0).max(100),
@@ -63,7 +78,7 @@ export const analyzeMood = createServerFn({ method: "POST" })
           {
             role: "system",
             content:
-              "You are a warm, gentle emotional-reflection companion for a personal mood journal. Analyze the user's journal entry and return ONLY a JSON object with keys: score (0-100 integer, higher = more positive), mood (single word like Happy, Sad, Anxious, Calm, Excited, Tired, Loved), emoji (one emoji matching the mood), summary (1-2 short warm sentences reflecting the feeling in second person, e.g. 'You seem...'). No medical advice. No extra prose, only JSON.",
+              "You are a warm, gentle emotional-reflection companion for a personal mood journal. Analyze the user's journal entry and return ONLY a JSON object with keys: score (0-100 integer, higher = more positive), mood (single word like Happy, Sad, Anxious, Calm, Excited, Tired, Loved), emoji (one emoji matching the mood), summary (1-2 short warm sentences reflecting the feeling in second person, e.g. 'You seem...'). The summary MUST be 50 words or fewer, no matter how long the journal entry is. No medical advice. No extra prose, only JSON.",
           },
           { role: "user", content: data.text },
         ],
@@ -78,6 +93,14 @@ export const analyzeMood = createServerFn({ method: "POST" })
     const json = await res.json();
     const content = json.choices?.[0]?.message?.content ?? "{}";
     const parsed = MoodSchema.parse(JSON.parse(content));
+
+    // Safety net: guarantee the summary is at most 50 words even if the
+    // model doesn't follow the instruction.
+    const summaryWords = parsed.summary.trim().split(/\s+/);
+    if (summaryWords.length > 50) {
+      parsed.summary = summaryWords.slice(0, 50).join(" ") + "…";
+    }
+
     return parsed;
   });
 
@@ -96,7 +119,12 @@ export const listMoodEntries = createServerFn({ method: "GET" }).handler(
 
 const SaveEntryInput = z.object({
   id: z.string().min(1),
-  text: z.string().min(1).max(280),
+  text: z
+    .string()
+    .min(1)
+    .refine((val) => countWords(val) <= MAX_WORDS, {
+      message: `Entry must be ${MAX_WORDS} words or fewer`,
+    }),
   score: z.number().min(0).max(100),
   mood: z.string(),
   emoji: z.string(),

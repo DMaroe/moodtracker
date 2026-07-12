@@ -31,12 +31,13 @@ function Home() {
   const analyze = useServerFn(analyzeMood);
   const save = useServerFn(saveMoodEntry);
 
-  const MAX = 280;
-  const remaining = text.length;
+  const MAX_WORDS = 5000;
+  const wordCount = text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
+  const overLimit = wordCount > MAX_WORDS;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!text.trim() || loading) return;
+    if (!text.trim() || loading || overLimit) return;
     setLoading(true);
     setError(null);
     try {
@@ -80,14 +81,18 @@ function Home() {
           <div className="bg-white/70 backdrop-blur rounded-3xl p-5 shadow-diary-soft border border-white">
             <textarea
               value={text}
-              onChange={(e) => setText(e.target.value.slice(0, MAX))}
+              onChange={(e) => setText(e.target.value)}
               placeholder="Today I feel…"
               rows={6}
-              maxLength={MAX}
               className="w-full resize-none bg-transparent outline-none text-diary-ink placeholder:text-diary-ink/30 text-lg leading-relaxed"
             />
-            <div className="flex justify-end text-xs text-diary-ink/40 mt-2">
-              {remaining}/{MAX}
+            <div
+              className={`flex justify-end text-xs mt-2 ${
+                overLimit ? "text-destructive" : "text-diary-ink/40"
+              }`}
+            >
+              {wordCount} {wordCount === 1 ? "word" : "words"}
+              {overLimit && ` (max ${MAX_WORDS})`}
             </div>
           </div>
 
@@ -97,7 +102,7 @@ function Home() {
 
           <button
             type="submit"
-            disabled={!text.trim() || loading}
+            disabled={!text.trim() || loading || overLimit}
             className="mt-6 w-full rounded-full bg-diary-pink text-white font-semibold py-4 text-base shadow-diary-glow transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
           >
             {loading ? "Feeling it out…" : "Analyze Eun's Mood ✨"}
